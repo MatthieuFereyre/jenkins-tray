@@ -1,0 +1,138 @@
+<ui:FluentWindow x:Class="JenkinsTray.Views.ServerEditorWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:vm="clr-namespace:JenkinsTray.ViewModels"
+                 xmlns:ctl="clr-namespace:JenkinsTray.Controls"
+                 xmlns:loc="clr-namespace:JenkinsTray.Services"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 mc:Ignorable="d"
+                 d:DataContext="{d:DesignInstance Type=vm:ServerEditorViewModel}"
+                 Title="{loc:Tr Editor_WindowTitle}"
+                 Width="560" SizeToContent="Height"
+                 ResizeMode="NoResize"
+                 WindowStartupLocation="CenterOwner"
+                 ExtendsContentIntoTitleBar="True"
+                 WindowBackdropType="None"
+                 WindowCornerPreference="Round"
+                 Background="{DynamicResource WindowBackgroundBrush}">
+
+    <ui:FluentWindow.Resources>
+        <!-- The result of a connection test, tinted the way a card tints its status panel. -->
+        <Style x:Key="TestNoticeStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="14,10" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="{DynamicResource StatusSuccessPanelBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource StatusSuccessPanelBorderBrush}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding TestFailed}" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource StatusFailurePanelBrush}" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource StatusFailurePanelBorderBrush}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="TestNoticeTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{DynamicResource StatusSuccessAccentBrush}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding TestFailed}" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource StatusFailureAccentBrush}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </ui:FluentWindow.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="{Binding Title}" ShowMaximize="False" ShowMinimize="False" />
+
+        <!-- The form sits on the same surface as a page of the main window. -->
+        <Border Grid.Row="1" Background="{DynamicResource PageBackgroundBrush}">
+            <StackPanel Margin="24,10,24,20">
+
+                <TextBlock Text="{loc:Tr Editor_DisplayName}" Style="{StaticResource FieldLabelStyle}" />
+                <ui:TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                            PlaceholderText="{loc:Tr Editor_DisplayNamePlaceholder}" />
+
+                <TextBlock Text="{loc:Tr Editor_ServerUrl}" Style="{StaticResource FieldLabelStyle}" Margin="2,14,0,5" />
+                <ui:TextBox Text="{Binding Url, UpdateSourceTrigger=PropertyChanged}"
+                            PlaceholderText="{loc:Tr Editor_ServerUrlPlaceholder}" />
+
+                <TextBlock Text="{loc:Tr Editor_Username}" Style="{StaticResource FieldLabelStyle}" Margin="2,14,0,5" />
+                <ui:TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                            PlaceholderText="{loc:Tr Editor_UsernamePlaceholder}" />
+
+                <TextBlock Text="{loc:Tr Editor_ApiToken}" Style="{StaticResource FieldLabelStyle}" Margin="2,14,0,5" />
+                <ui:PasswordBox Password="{Binding Token, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                PlaceholderText="11a2b3c4d5…"
+                                RevealButtonEnabled="True" />
+                <TextBlock Style="{StaticResource TertiaryTextStyle}" Margin="2,6,0,0" TextWrapping="Wrap"
+                           Text="{loc:Tr Editor_ApiTokenHint}" />
+
+                <Border Style="{StaticResource SurfacePanelStyle}" Margin="0,18,0,0">
+                    <StackPanel>
+                        <ctl:SettingsRow Symbol="ShieldError24"
+                                         Header="{loc:Tr Editor_IgnoreCertErrors}"
+                                         Description="{loc:Tr Editor_IgnoreCertErrorsDesc}">
+                            <ui:ToggleSwitch IsChecked="{Binding AcceptInvalidCertificate, Mode=TwoWay}" />
+                        </ctl:SettingsRow>
+
+                        <Border Style="{StaticResource RowDividerStyle}" />
+
+                        <ctl:SettingsRow Symbol="Pulse24" Header="{loc:Tr Editor_ServerEnabled}">
+                            <ui:ToggleSwitch IsChecked="{Binding Enabled, Mode=TwoWay}" />
+                        </ctl:SettingsRow>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource TestNoticeStyle}"
+                        Margin="0,16,0,0"
+                        Visibility="{Binding HasTestMessage, Converter={StaticResource BoolToVis}}">
+                    <StackPanel>
+                        <TextBlock ctl:TrackedText.Text="{loc:Tr Editor_ConnectionTest}"
+                                   Style="{StaticResource TestNoticeTextStyle}"
+                                   FontSize="11"
+                                   FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding TestMessage}"
+                                   Style="{StaticResource TestNoticeTextStyle}"
+                                   Margin="0,3,0,0" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <!-- Action bar: raised above the form, like a card above its page. -->
+        <Border Grid.Row="2"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource SurfaceBorderBrush}"
+                BorderThickness="0,1,0,0"
+                Padding="24,14">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <ui:Button Content="{loc:Tr Editor_TestConnection}"
+                               Icon="{ui:SymbolIcon Play24}"
+                               Appearance="Secondary"
+                               Command="{Binding TestCommand}"
+                               IsEnabled="{Binding IsTesting, Converter={StaticResource InvBool}}" />
+                    <ui:ProgressRing IsIndeterminate="True" Width="18" Height="18" Margin="12,0,0,0"
+                                     VerticalAlignment="Center"
+                                     Visibility="{Binding IsTesting, Converter={StaticResource BoolToVis}}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <ui:Button Content="{loc:Tr Editor_Cancel}" Appearance="Secondary" Click="OnCancel" MinWidth="96" />
+                    <ui:Button Content="{loc:Tr Editor_Save}" Appearance="Primary" Click="OnSave" MinWidth="110" Margin="10,0,0,0" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</ui:FluentWindow>

@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Generated pair: Strings_en.resx is the fallback for every key, Strings_fr.resx the French
+    translation. Both are embedded in the main assembly and selected explicitly by Loc, which is
+    why neither carries a culture suffix .NET would resolve on its own.
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a2c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a2c561934e089</value>
+  </resheader>
+  <data name="Dashboard_AllPassed" xml:space="preserve">
+    <value>all passed</value>
+  </data>
+  <data name="Dashboard_Branches" xml:space="preserve">
+    <value>branches</value>
+  </data>
+  <data name="Dashboard_BuildingCount" xml:space="preserve">
+    <value>{0} running</value>
+  </data>
+  <data name="Dashboard_EmptyHint" xml:space="preserve">
+    <value>Add a server in Settings, then tick the jobs to follow in the Jobs tab.</value>
+  </data>
+  <data name="Dashboard_EmptyTitle" xml:space="preserve">
+    <value>No job monitored</value>
+  </data>
+  <data name="Dashboard_FailingCount" xml:space="preserve">
+    <value>{0} failing</value>
+  </data>
+  <data name="Dashboard_Lines" xml:space="preserve">
+    <value>lines</value>
+  </data>
+  <data name="Dashboard_MonitoredJobMany" xml:space="preserve">
+    <value>{0} jobs monitored</value>
+  </data>
+  <data name="Dashboard_MonitoredJobOne" xml:space="preserve">
+    <value>{0} job monitored</value>
+  </data>
+  <data name="Dashboard_NotRefreshedYet" xml:space="preserve">
+    <value>Not refreshed yet</value>
+  </data>
+  <data name="Dashboard_OpenInBrowser" xml:space="preserve">
+    <value>Open the job in the browser</value>
+  </data>
+  <data name="Dashboard_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Dashboard_RefreshedAt" xml:space="preserve">
+    <value>Refreshed {0}</value>
+  </data>
+  <data name="Dashboard_RunBuild" xml:space="preserve">
+    <value>Run a build of this job</value>
+  </data>
+  <data name="Dashboard_SortTooltip" xml:space="preserve">
+    <value>How the cards are sorted</value>
+  </data>
+  <data name="Dashboard_StopMonitoring" xml:space="preserve">
+    <value>Stop monitoring this job</value>
+  </data>
+  <data name="Dashboard_Tests" xml:space="preserve">
+    <value>Tests</value>
+  </data>
+  <data name="Dashboard_Title" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Dashboard_UnstableMany" xml:space="preserve">
+    <value>{0} unstable</value>
+  </data>
+  <data name="Dashboard_UnstableOne" xml:space="preserve">
+    <value>{0} unstable</value>
+  </data>
+  <data name="Editor_ApiToken" xml:space="preserve">
+    <value>API token</value>
+  </data>
+  <data name="Editor_ApiTokenHint" xml:space="preserve">
+    <value>Generate it in Jenkins: your profile → Configure → API tokens. The token is encrypted with DPAPI on this machine.</value>
+  </data>
+  <data name="Editor_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Editor_ConnectionTest" xml:space="preserve">
+    <value>Connection test</value>
+  </data>
+  <data name="Editor_CredentialsRequired" xml:space="preserve">
+    <value>The user and the API token are required.</value>
+  </data>
+  <data name="Editor_DisplayName" xml:space="preserve">
+    <value>Display name</value>
+  </data>
+  <data name="Editor_DisplayNamePlaceholder" xml:space="preserve">
+    <value>Production CI</value>
+  </data>
+  <data name="Editor_IgnoreCertErrors" xml:space="preserve">
+    <value>Ignore certificate errors</value>
+  </data>
+  <data name="Editor_IgnoreCertErrorsDesc" xml:space="preserve">
+    <value>Only for a trusted self-signed certificate.</value>
+  </data>
+  <data name="Editor_InvalidUrl" xml:space="preserve">
+    <value>Invalid URL. Expected something like: https://ci.example.com/</value>
+  </data>
+  <data name="Editor_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Editor_ServerEnabled" xml:space="preserve">
+    <value>Server enabled</value>
+  </data>
+  <data name="Editor_ServerUrl" xml:space="preserve">
+    <value>Server URL</value>
+  </data>
+  <data name="Editor_ServerUrlPlaceholder" xml:space="preserve">
+    <value>https://ci.example.com/</value>
+  </data>
+  <data name="Editor_TestConnection" xml:space="preserve">
+    <value>Test the connection</value>
+  </data>
+  <data name="Editor_Timeout" xml:space="preserve">
+    <value>Timed out (20 s).</value>
+  </data>
+  <data name="Editor_TitleEdit" xml:space="preserve">
+    <value>Edit the server</value>
+  </data>
+  <data name="Editor_TitleNew" xml:space="preserve">
+    <value>Add a Jenkins server</value>
+  </data>
+  <data name="Editor_Username" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="Editor_UsernamePlaceholder" xml:space="preserve">
+    <value>first.last</value>
+  </data>
+  <data name="Editor_WindowTitle" xml:space="preserve">
+    <value>Jenkins server</value>
+  </data>
+  <data name="Jenkins_AnonymousUser" xml:space="preserve">
+    <value>anonymous user</value>
+  </data>
+  <data name="Jenkins_BuildRefused" xml:space="preserve">
+    <value>the job does not accept a build (disabled?)</value>
+  </data>
+  <data name="Jenkins_ForbiddenBuild" xml:space="preserve">
+    <value>access denied (403) — the account may not start this job</value>
+  </data>
+  <data name="Jenkins_ForbiddenRead" xml:space="preserve">
+    <value>access denied (403) — the account has no read permission</value>
+  </data>
+  <data name="Jenkins_JobNotFound" xml:space="preserve">
+    <value>job not found (404) — it may have been renamed or deleted</value>
+  </data>
+  <data name="Jenkins_ProxyAuthRequired" xml:space="preserve">
+    <value>proxy authentication required (407)</value>
+  </data>
+  <data name="Jenkins_Reachable" xml:space="preserve">
+    <value>Jenkins reachable</value>
+  </data>
+  <data name="Jenkins_ResourceNotFound" xml:space="preserve">
+    <value>resource not found (404) — check the server URL</value>
+  </data>
+  <data name="Jenkins_SignedInAs" xml:space="preserve">
+    <value>signed in as {0}</value>
+  </data>
+  <data name="Jenkins_Unauthorized" xml:space="preserve">
+    <value>credentials refused (401) — check the user and the API token</value>
+  </data>
+  <data name="Job_BuildStartFailed" xml:space="preserve">
+    <value>Cannot start a build: {0}</value>
+  </data>
+  <data name="Job_Building" xml:space="preserve">
+    <value>build running</value>
+  </data>
+  <data name="Job_NoBuildFinished" xml:space="preserve">
+    <value>No build finished</value>
+  </data>
+  <data name="Job_Requested" xml:space="preserve">
+    <value>build requested</value>
+  </data>
+  <data name="Jobs_Caption" xml:space="preserve">
+    <value>Tick the jobs you want to be notified about when a build ends.</value>
+  </data>
+  <data name="Jobs_CheckAllShown" xml:space="preserve">
+    <value>Tick every job shown</value>
+  </data>
+  <data name="Jobs_CollapseAll" xml:space="preserve">
+    <value>Collapse all</value>
+  </data>
+  <data name="Jobs_ExpandAll" xml:space="preserve">
+    <value>Expand all</value>
+  </data>
+  <data name="Jobs_FilterPlaceholder" xml:space="preserve">
+    <value>Filter by name…</value>
+  </data>
+  <data name="Jobs_FoundMany" xml:space="preserve">
+    <value>{0} jobs found.</value>
+  </data>
+  <data name="Jobs_FoundOne" xml:space="preserve">
+    <value>{0} job found.</value>
+  </data>
+  <data name="Jobs_ListFailed" xml:space="preserve">
+    <value>Cannot list the jobs: {0}</value>
+  </data>
+  <data name="Jobs_MonitoredOnServerSuffix" xml:space="preserve">
+    <value> job(s) monitored on this server</value>
+  </data>
+  <data name="Jobs_NoServerHint" xml:space="preserve">
+    <value>Add a Jenkins instance from the Settings tab to list its jobs.</value>
+  </data>
+  <data name="Jobs_NoServerTitle" xml:space="preserve">
+    <value>No server configured</value>
+  </data>
+  <data name="Jobs_NoneFound" xml:space="preserve">
+    <value>No job found on this server.</value>
+  </data>
+  <data name="Jobs_Reload" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+  <data name="Jobs_Title" xml:space="preserve">
+    <value>Jobs</value>
+  </data>
+  <data name="Jobs_UncheckAllShown" xml:space="preserve">
+    <value>Untick every job shown</value>
+  </data>
+  <data name="Nav_Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Nav_Jobs" xml:space="preserve">
+    <value>Jobs</value>
+  </data>
+  <data name="Nav_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Settings_AddServer" xml:space="preserve">
+    <value>Add a server</value>
+  </data>
+  <data name="Settings_Caption" xml:space="preserve">
+    <value>The servers to poll, what triggers a notification, and how the application behaves.</value>
+  </data>
+  <data name="Settings_CloseToTray" xml:space="preserve">
+    <value>Close to the notification area</value>
+  </data>
+  <data name="Settings_CloseToTrayDesc" xml:space="preserve">
+    <value>Otherwise the close button quits the application.</value>
+  </data>
+  <data name="Settings_ConfigFile" xml:space="preserve">
+    <value>Configuration file</value>
+  </data>
+  <data name="Settings_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Settings_DeleteServerDetailMany" xml:space="preserve">
+    <value>
+{0} monitored jobs will be removed.</value>
+  </data>
+  <data name="Settings_DeleteServerDetailOne" xml:space="preserve">
+    <value>
+{0} monitored job will be removed.</value>
+  </data>
+  <data name="Settings_DeleteServerQuestion" xml:space="preserve">
+    <value>Delete “{0}”?{1}</value>
+  </data>
+  <data name="Settings_DeleteServerTitle" xml:space="preserve">
+    <value>Delete the server</value>
+  </data>
+  <data name="Settings_DiscoveryDepth" xml:space="preserve">
+    <value>Exploration depth</value>
+  </data>
+  <data name="Settings_DiscoveryDepthDesc" xml:space="preserve">
+    <value>Levels of folders / multibranch projects walked when listing jobs.</value>
+  </data>
+  <data name="Settings_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Settings_LanguageDesc" xml:space="preserve">
+    <value>Applied immediately, no restart needed.</value>
+  </data>
+  <data name="Settings_LanguageSystem" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Settings_NoServerYet" xml:space="preserve">
+    <value>No server yet.</value>
+  </data>
+  <data name="Settings_NotifyAborted" xml:space="preserve">
+    <value>Notify aborted builds</value>
+  </data>
+  <data name="Settings_NotifyFailure" xml:space="preserve">
+    <value>Notify failed builds</value>
+  </data>
+  <data name="Settings_NotifySuccess" xml:space="preserve">
+    <value>Notify successful builds</value>
+  </data>
+  <data name="Settings_NotifyUnstable" xml:space="preserve">
+    <value>Notify unstable builds</value>
+  </data>
+  <data name="Settings_OnlyStatusChange" xml:space="preserve">
+    <value>Status changes only</value>
+  </data>
+  <data name="Settings_OnlyStatusChangeDesc" xml:space="preserve">
+    <value>Notify only if the result differs from the previous build.</value>
+  </data>
+  <data name="Settings_OpenFolder" xml:space="preserve">
+    <value>Open the folder</value>
+  </data>
+  <data name="Settings_PlaySound" xml:space="preserve">
+    <value>Play a sound</value>
+  </data>
+  <data name="Settings_PollInterval" xml:space="preserve">
+    <value>Poll interval</value>
+  </data>
+  <data name="Settings_PollIntervalDesc" xml:space="preserve">
+    <value>Delay between two Jenkins queries, in seconds.</value>
+  </data>
+  <data name="Settings_SectionApplication" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="Settings_SectionMonitoring" xml:space="preserve">
+    <value>Monitoring</value>
+  </data>
+  <data name="Settings_SectionNotifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="Settings_SectionServers" xml:space="preserve">
+    <value>Jenkins servers</value>
+  </data>
+  <data name="Settings_ServerSummaryJobs" xml:space="preserve">
+    <value>{0} job(s) monitored</value>
+  </data>
+  <data name="Settings_StartMinimized" xml:space="preserve">
+    <value>Start minimised to the notification area</value>
+  </data>
+  <data name="Settings_StartWithWindows" xml:space="preserve">
+    <value>Start with Windows</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Settings_ThemeDark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="Settings_ThemeLight" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="Settings_ThemeSystem" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Settings_TokenNotice" xml:space="preserve">
+    <value>API tokens are encrypted with DPAPI and readable only by your Windows session.</value>
+  </data>
+  <data name="Shell_VersionTooltip" xml:space="preserve">
+    <value>Jenkins Tray version</value>
+  </data>
+  <data name="Sort_Coverage" xml:space="preserve">
+    <value>Coverage (lowest)</value>
+  </data>
+  <data name="Sort_Duration" xml:space="preserve">
+    <value>Duration (longest)</value>
+  </data>
+  <data name="Sort_LastBuild" xml:space="preserve">
+    <value>Last build (most recent)</value>
+  </data>
+  <data name="Sort_Name" xml:space="preserve">
+    <value>Name (A → Z)</value>
+  </data>
+  <data name="Sort_ServerThenName" xml:space="preserve">
+    <value>Server, then name</value>
+  </data>
+  <data name="Sort_Status" xml:space="preserve">
+    <value>Status (worst first)</value>
+  </data>
+  <data name="Status_Aborted" xml:space="preserve">
+    <value>Aborted</value>
+  </data>
+  <data name="Status_Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="Status_Failure" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="Status_NotBuilt" xml:space="preserve">
+    <value>Never built</value>
+  </data>
+  <data name="Status_Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="Status_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Status_Unstable" xml:space="preserve">
+    <value>Unstable</value>
+  </data>
+  <data name="Tests_FailedMany" xml:space="preserve">
+    <value>{0} failures</value>
+  </data>
+  <data name="Tests_FailedOne" xml:space="preserve">
+    <value>{0} failure</value>
+  </data>
+  <data name="Tests_FailureWordMany" xml:space="preserve">
+    <value>failures</value>
+  </data>
+  <data name="Tests_FailureWordOne" xml:space="preserve">
+    <value>failure</value>
+  </data>
+  <data name="Tests_PassedMany" xml:space="preserve">
+    <value>{0} passed</value>
+  </data>
+  <data name="Tests_PassedOne" xml:space="preserve">
+    <value>{0} passed</value>
+  </data>
+  <data name="Tests_SkippedMany" xml:space="preserve">
+    <value>{0} skipped</value>
+  </data>
+  <data name="Tests_SkippedOne" xml:space="preserve">
+    <value>{0} skipped</value>
+  </data>
+  <data name="Time_DaysAgo" xml:space="preserve">
+    <value>{0} d ago</value>
+  </data>
+  <data name="Time_HoursAgo" xml:space="preserve">
+    <value>{0} h ago</value>
+  </data>
+  <data name="Time_JustNow" xml:space="preserve">
+    <value>just now</value>
+  </data>
+  <data name="Time_MinutesAgo" xml:space="preserve">
+    <value>{0} min ago</value>
+  </data>
+  <data name="Toast_Branches" xml:space="preserve">
+    <value>branches {0}</value>
+  </data>
+  <data name="Toast_Coverage" xml:space="preserve">
+    <value>Coverage: {0}</value>
+  </data>
+  <data name="Toast_Lines" xml:space="preserve">
+    <value>lines {0}</value>
+  </data>
+  <data name="Toast_Tests" xml:space="preserve">
+    <value>Tests: {0} of {1}</value>
+  </data>
+  <data name="Tray_AllGreen" xml:space="preserve">
+    <value>all green</value>
+  </data>
+  <data name="Tray_ChooseJobs" xml:space="preserve">
+    <value>Choose the jobs…</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Tray_MonitoredJobs" xml:space="preserve">
+    <value>Monitored jobs</value>
+  </data>
+  <data name="Tray_NoJobMonitored" xml:space="preserve">
+    <value>No job monitored</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Open Jenkins Tray</value>
+  </data>
+  <data name="Tray_RefreshNow" xml:space="preserve">
+    <value>Refresh now</value>
+  </data>
+  <data name="Tray_Settings" xml:space="preserve">
+    <value>Settings…</value>
+  </data>
+  <data name="Tray_TooltipNoJob" xml:space="preserve">
+    <value>Jenkins Tray — no job monitored</value>
+  </data>
+  <data name="Tray_UnstableCount" xml:space="preserve">
+    <value>{0} unstable</value>
+  </data>
+</root>

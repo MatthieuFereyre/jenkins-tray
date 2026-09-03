@@ -1,0 +1,327 @@
+<UserControl x:Class="JenkinsTray.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:vm="clr-namespace:JenkinsTray.ViewModels"
+             xmlns:ctl="clr-namespace:JenkinsTray.Controls"
+             xmlns:loc="clr-namespace:JenkinsTray.Services"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:DashboardViewModel}">
+
+    <Grid Margin="24,20,24,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="{loc:Tr Dashboard_Title}" Style="{StaticResource PageTitleStyle}" />
+                <TextBlock Text="{Binding SummaryText}"
+                           Style="{StaticResource Caption}"
+                           Margin="0,2,0,0"
+                           Visibility="{Binding SummaryText, Converter={StaticResource StrToVis}}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <ui:ProgressRing IsIndeterminate="True"
+                                 Width="18" Height="18"
+                                 Margin="0,0,12,0"
+                                 Visibility="{Binding IsRefreshing, Converter={StaticResource BoolToVis}}" />
+
+                <ui:SymbolIcon Symbol="ArrowSort24" FontSize="16"
+                               VerticalAlignment="Center" Margin="0,0,8,0"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               Visibility="{Binding IsEmpty, Converter={StaticResource InvBoolToVis}}" />
+                <ComboBox ItemsSource="{Binding SortOptions}"
+                          SelectedItem="{Binding SelectedSort, Mode=TwoWay}"
+                          DisplayMemberPath="Label"
+                          Width="228"
+                          Margin="0,0,12,0"
+                          ToolTip="{loc:Tr Dashboard_SortTooltip}"
+                          Visibility="{Binding IsEmpty, Converter={StaticResource InvBoolToVis}}" />
+
+                <ui:Button Command="{Binding RefreshCommand}"
+                           Icon="{ui:SymbolIcon ArrowSync24}"
+                           Content="{loc:Tr Dashboard_Refresh}"
+                           Appearance="Secondary" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Empty state -->
+        <StackPanel Grid.Row="1"
+                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                    MaxWidth="420"
+                    Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}">
+            <ui:SymbolIcon Symbol="Pulse24" FontSize="42" HorizontalAlignment="Center"
+                           Foreground="{DynamicResource TextTertiaryBrush}" />
+            <TextBlock Text="{loc:Tr Dashboard_EmptyTitle}"
+                       Style="{StaticResource SubtitleTextBlockStyle}"
+                       HorizontalAlignment="Center"
+                       Margin="0,14,0,6" />
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center"
+                       Style="{StaticResource Caption}"
+                       Text="{loc:Tr Dashboard_EmptyHint}" />
+        </StackPanel>
+
+        <!-- Cards -->
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      Padding="0,0,14,0"
+                      Visibility="{Binding IsEmpty, Converter={StaticResource InvBoolToVis}}">
+            <ItemsControl ItemsSource="{Binding Jobs}" Margin="0,0,0,20">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:MonitoredJobViewModel}">
+                        <!-- The margins are the room the drop shadow needs; the ScrollViewer clips.
+                             The gap to the scroll bar is the padding of the ScrollViewer, not this
+                             margin, so it stays put when there is nothing to scroll. -->
+                        <Border Style="{StaticResource CardRootStyle}" Margin="6,2,6,16">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Status panel: the whole verdict, readable from across the room. -->
+                                <Border Grid.Column="0" Style="{StaticResource CardStatusPanelStyle}">
+                                    <StackPanel VerticalAlignment="Center">
+                                        <!-- Fixed 26x26 box: the glyphs are drawn at absolute coordinates. -->
+                                        <Grid Width="26" Height="26" HorizontalAlignment="Center">
+                                            <Ellipse Style="{StaticResource CardStatusRingStyle}" />
+                                            <Path Style="{StaticResource CardStatusGlyphStyle}" />
+                                            <Path Style="{StaticResource CardStatusGlyphDotStyle}" />
+                                        </Grid>
+
+                                        <TextBlock Style="{StaticResource CardStatusAccentTextStyle}"
+                                                   Text="{Binding BuildLabel}"
+                                                   FontFamily="{StaticResource MonoFont}"
+                                                   FontSize="13"
+                                                   FontWeight="Bold"
+                                                   Margin="2,7,2,0" />
+
+                                        <TextBlock Style="{StaticResource CardStatusAccentTextStyle}"
+                                                   Text="{Binding StatusLabel, Converter={StaticResource UpperTracking}}"
+                                                   FontSize="10.5"
+                                                   FontWeight="SemiBold"
+                                                   Opacity="0.85"
+                                                   Margin="0,7,0,0" />
+                                    </StackPanel>
+                                </Border>
+
+                                <Grid Grid.Column="1" Margin="16,15,16,15">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Title, meta line and the three card actions -->
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <!-- Auto, then a filler: the badge stays glued to the
+                                                         name, and a long name gets an ellipsis instead of
+                                                         pushing it away. -->
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- "project › branch": the leaf alone says nothing on a
+                                                     multibranch job. All three runs on one line — a break
+                                                     between them would show up as a space. -->
+                                                <TextBlock Grid.Column="0"
+                                                           VerticalAlignment="Center"
+                                                           MaxWidth="460"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           FontSize="14"
+                                                           Foreground="{DynamicResource TextSecondaryBrush}"
+                                                           ToolTip="{Binding FullName}"><Run Text="{Binding ProjectName, Mode=OneWay}" /><Run Text="{Binding ProjectSeparator, Mode=OneWay}" Foreground="{DynamicResource ChevronBrush}" /><Run Text="{Binding DisplayName, Mode=OneWay}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" /></TextBlock>
+
+                                                <Border Grid.Column="1"
+                                                        Margin="8,0,0,0"
+                                                        Padding="7,1"
+                                                        VerticalAlignment="Center"
+                                                        CornerRadius="9"
+                                                        Background="{DynamicResource AccentFillColorDefaultBrush}"
+                                                        Visibility="{Binding IsActive, Converter={StaticResource BoolToVis}}">
+                                                    <TextBlock Text="{Binding ActivityLabel}"
+                                                               FontSize="11"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="White" />
+                                                </Border>
+                                            </Grid>
+
+                                            <TextBlock Text="{Binding MetaLine}"
+                                                       Margin="0,2,0,0"
+                                                       FontSize="12"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       Foreground="{DynamicResource TextTertiaryBrush}" />
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
+                                            <!-- The glyph gives way to a ring while Jenkins is being asked. -->
+                                            <Button Style="{StaticResource IconButtonStyle}"
+                                                    Command="{Binding TriggerBuildCommand}"
+                                                    Margin="0,0,4,0"
+                                                    ToolTip="{loc:Tr Dashboard_RunBuild}">
+                                                <Grid Width="14" Height="14">
+                                                    <ui:SymbolIcon Symbol="Play24" FontSize="14"
+                                                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                                                   Visibility="{Binding IsTriggering, Converter={StaticResource InvBoolToVis}}" />
+                                                    <ui:ProgressRing IsIndeterminate="True"
+                                                                     Width="14" Height="14"
+                                                                     Visibility="{Binding IsTriggering, Converter={StaticResource BoolToVis}}" />
+                                                </Grid>
+                                            </Button>
+                                            <Button Style="{StaticResource IconButtonStyle}"
+                                                    Command="{Binding OpenCommand}"
+                                                    ToolTip="{loc:Tr Dashboard_OpenInBrowser}">
+                                                <ui:SymbolIcon Symbol="Open24" FontSize="14"
+                                                               Foreground="{DynamicResource TextSecondaryBrush}" />
+                                            </Button>
+                                            <Button Style="{StaticResource IconButtonDangerStyle}"
+                                                    Command="{Binding StopMonitoringCommand}"
+                                                    Margin="4,0,0,0"
+                                                    ToolTip="{loc:Tr Dashboard_StopMonitoring}">
+                                                <ui:SymbolIcon Symbol="EyeOff24" FontSize="14"
+                                                               Foreground="{DynamicResource TextSecondaryBrush}" />
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Tests and coverage. A job that reports neither has no such row. -->
+                                    <Grid Grid.Row="1" Margin="0,14,0,0"
+                                          Visibility="{Binding HasStats, Converter={StaticResource BoolToVis}}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <Border Grid.Row="0" Height="1"
+                                                Background="{DynamicResource DividerBrush}" />
+
+                                        <Grid Grid.Row="1" Margin="0,13,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0" VerticalAlignment="Center"
+                                                        Visibility="{Binding HasTests, Converter={StaticResource BoolToVis}}">
+                                                <TextBlock ctl:TrackedText.Text="{loc:Tr Dashboard_Tests}"
+                                                           FontSize="11"
+                                                           Foreground="{DynamicResource TextTertiaryBrush}" />
+
+                                                <TextBlock Style="{StaticResource CardTestsHeadlineStyle}"
+                                                           Margin="0,3,0,0"
+                                                           FontFamily="{StaticResource MonoFont}"
+                                                           FontSize="20"
+                                                           FontWeight="Bold"><Run Text="{Binding TestsHeadline, Mode=OneWay}" /><Run Text="{Binding TestsHeadlineSuffix, Mode=OneWay}" FontSize="12" FontWeight="Normal" Foreground="{DynamicResource TextTertiaryBrush}" /></TextBlock>
+
+                                                <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                                                    <TextBlock Text="{loc:Tr Dashboard_AllPassed}" FontSize="11"
+                                                               Foreground="{DynamicResource StatusSuccessAccentBrush}"
+                                                               Visibility="{Binding ShowAllPassed, Converter={StaticResource BoolToVis}}" />
+                                                    <TextBlock Text="{Binding FailedCountText}" FontSize="11"
+                                                               Foreground="{DynamicResource StatusFailureAccentBrush}"
+                                                               Visibility="{Binding ShowFailedCount, Converter={StaticResource BoolToVis}}" />
+                                                    <TextBlock Text=" · " FontSize="11"
+                                                               Foreground="{DynamicResource TextTertiaryBrush}"
+                                                               Visibility="{Binding ShowTestsSeparator, Converter={StaticResource BoolToVis}}" />
+                                                    <TextBlock Text="{Binding SkippedCountText}" FontSize="11"
+                                                               Foreground="{DynamicResource TextTertiaryBrush}"
+                                                               Visibility="{Binding ShowSkippedCount, Converter={StaticResource BoolToVis}}" />
+                                                    <TextBlock Text="{Binding PassedCountText}" FontSize="11"
+                                                               Foreground="{DynamicResource TextSecondaryBrush}"
+                                                               Visibility="{Binding ShowPassedCount, Converter={StaticResource BoolToVis}}" />
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <!-- Line coverage -->
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal"
+                                                        Margin="18,0,0,0" VerticalAlignment="Center"
+                                                        ToolTip="{Binding CoverageSource}"
+                                                        Visibility="{Binding HasLineCoverage, Converter={StaticResource BoolToVis}}">
+                                                <Grid Width="52" Height="52">
+                                                    <ctl:CircularGauge Value="{Binding LineCoverage}"
+                                                                       StrokeThickness="5.85"
+                                                                       TrackBrush="{DynamicResource GaugeTrackBrush}"
+                                                                       ProgressBrush="{DynamicResource GaugeLineBrush}" />
+                                                    <TextBlock Text="{Binding LineCoverageRounded}"
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                               FontFamily="{StaticResource MonoFont}"
+                                                               FontSize="12.5"
+                                                               FontWeight="Bold"
+                                                               Foreground="{DynamicResource TextPrimaryBrush}" />
+                                                </Grid>
+                                                <StackPanel Margin="8,0,0,0" VerticalAlignment="Center">
+                                                    <TextBlock Text="{loc:Tr Dashboard_Lines}" FontSize="11"
+                                                               Foreground="{DynamicResource TextTertiaryBrush}" />
+                                                    <TextBlock Text="{Binding LineCoverageLabel}" FontSize="11"
+                                                               Margin="0,1,0,0"
+                                                               Foreground="{DynamicResource TextSecondaryBrush}" />
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <!-- Branch coverage -->
+                                            <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                                        Margin="18,0,0,0" VerticalAlignment="Center"
+                                                        ToolTip="{Binding CoverageSource}"
+                                                        Visibility="{Binding HasBranchCoverage, Converter={StaticResource BoolToVis}}">
+                                                <Grid Width="52" Height="52">
+                                                    <ctl:CircularGauge Value="{Binding BranchCoverage}"
+                                                                       StrokeThickness="5.85"
+                                                                       TrackBrush="{DynamicResource GaugeTrackBrush}"
+                                                                       ProgressBrush="{DynamicResource GaugeBranchBrush}" />
+                                                    <TextBlock Text="{Binding BranchCoverageRounded}"
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                               FontFamily="{StaticResource MonoFont}"
+                                                               FontSize="12.5"
+                                                               FontWeight="Bold"
+                                                               Foreground="{DynamicResource TextPrimaryBrush}" />
+                                                </Grid>
+                                                <StackPanel Margin="8,0,0,0" VerticalAlignment="Center">
+                                                    <TextBlock Text="{loc:Tr Dashboard_Branches}" FontSize="11"
+                                                               Foreground="{DynamicResource TextTertiaryBrush}" />
+                                                    <TextBlock Text="{Binding BranchCoverageLabel}" FontSize="11"
+                                                               Margin="0,1,0,0"
+                                                               Foreground="{DynamicResource TextSecondaryBrush}" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+
+                                    <!-- Error banner: negative margins take it back out to the card edges. -->
+                                    <Border Grid.Row="2"
+                                            Margin="-16,13,-16,-15"
+                                            Padding="16,6"
+                                            CornerRadius="0,0,13,0"
+                                            Background="{DynamicResource SystemFillColorCriticalBackgroundBrush}"
+                                            Visibility="{Binding HasError, Converter={StaticResource BoolToVis}}">
+                                        <TextBlock Text="{Binding ErrorText}" FontSize="12" TextWrapping="Wrap"
+                                                   Foreground="{DynamicResource SystemFillColorCriticalBrush}" />
+                                    </Border>
+                                </Grid>
+
+                                <!-- Last child, both columns: the whole tile breathes, not just its content. -->
+                                <Border Grid.Column="0" Grid.ColumnSpan="2"
+                                        Style="{StaticResource CardBuildPulseStyle}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

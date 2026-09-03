@@ -1,0 +1,4 @@
+# The Linux build breaks on CRLF: a shell script with carriage returns fails with a
+# "bad interpreter" error that names neither the file nor the reason.
+*.sh text eol=lf
+Dockerfile text eol=lf

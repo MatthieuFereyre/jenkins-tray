@@ -1,0 +1,91 @@
+<ui:FluentWindow x:Class="JenkinsTray.Views.ShellWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:vm="clr-namespace:JenkinsTray.ViewModels"
+                 xmlns:loc="clr-namespace:JenkinsTray.Services"
+                 d:DataContext="{d:DesignInstance Type=vm:ShellViewModel}"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 mc:Ignorable="d"
+                 Title="Jenkins Tray"
+                 Width="1100" Height="740"
+                 MinWidth="880" MinHeight="560"
+                 WindowStartupLocation="CenterScreen"
+                 ExtendsContentIntoTitleBar="True"
+                 WindowBackdropType="None"
+                 WindowCornerPreference="Round"
+                 Background="{DynamicResource WindowBackgroundBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="Jenkins Tray" ShowMaximize="True">
+            <ui:TitleBar.Icon>
+                <ui:ImageIcon Source="pack://application:,,,/Assets/icon.png" Width="18" Height="18" />
+            </ui:TitleBar.Icon>
+        </ui:TitleBar>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="216" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <DockPanel Grid.Column="0" Margin="16,4,8,14">
+                <!-- Foot of the rail: the last poll, and under it the version being run. -->
+                <TextBlock DockPanel.Dock="Bottom"
+                           Style="{StaticResource Caption}"
+                           Margin="10,6,0,0"
+                           Opacity="0.7"
+                           ToolTip="{loc:Tr Shell_VersionTooltip}"
+                           Text="{Binding AppVersion}" />
+
+                <TextBlock DockPanel.Dock="Bottom"
+                           Style="{StaticResource Caption}"
+                           TextWrapping="Wrap"
+                           Margin="10,12,0,0"
+                           Text="{Binding Dashboard.LastRefreshText}" />
+
+                <ListBox x:Name="NavList"
+                         DockPanel.Dock="Top"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Padding="0"
+                         SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+                         ItemContainerStyle="{StaticResource NavItemStyle}">
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Board24" FontSize="18" Margin="0,0,12,0" />
+                            <TextBlock Text="{loc:Tr Nav_Dashboard}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="TaskListSquareLtr24" FontSize="18" Margin="0,0,12,0" />
+                            <TextBlock Text="{loc:Tr Nav_Jobs}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Settings24" FontSize="18" Margin="0,0,12,0" />
+                            <TextBlock Text="{loc:Tr Nav_Settings}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+            </DockPanel>
+
+            <Border Grid.Column="1"
+                    Margin="0,0,0,0"
+                    CornerRadius="8,0,0,0"
+                    Background="{DynamicResource PageBackgroundBrush}"
+                    BorderBrush="{DynamicResource SurfaceBorderBrush}"
+                    BorderThickness="1,1,0,0">
+                <ContentControl Content="{Binding CurrentPage}" Margin="0" />
+            </Border>
+        </Grid>
+    </Grid>
+</ui:FluentWindow>

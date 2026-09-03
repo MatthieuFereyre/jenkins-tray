@@ -1,0 +1,186 @@
+<UserControl x:Class="JenkinsTray.Views.JobsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:vm="clr-namespace:JenkinsTray.ViewModels"
+             xmlns:ctl="clr-namespace:JenkinsTray.Controls"
+             xmlns:loc="clr-namespace:JenkinsTray.Services"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:JobsViewModel}">
+
+    <Grid Margin="24,20,24,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="{loc:Tr Jobs_Title}" Style="{StaticResource PageTitleStyle}" />
+                <TextBlock Style="{StaticResource PageCaptionStyle}"
+                           Text="{loc:Tr Jobs_Caption}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <ui:ProgressRing IsIndeterminate="True" Width="18" Height="18" Margin="0,0,12,0"
+                                 Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}" />
+                <ui:Button Command="{Binding LoadCommand}"
+                           Icon="{ui:SymbolIcon ArrowSync24}"
+                           Content="{loc:Tr Jobs_Reload}"
+                           Appearance="Secondary"
+                           IsEnabled="{Binding IsLoading, Converter={StaticResource InvBool}}" />
+            </StackPanel>
+        </Grid>
+
+        <!-- No server configured: the same surface as everything else, not a system info bar. -->
+        <Border Grid.Row="1"
+                Style="{StaticResource SurfacePanelStyle}"
+                Margin="2,0,4,14"
+                Padding="16,12"
+                Visibility="{Binding HasServers, Converter={StaticResource InvBoolToVis}}">
+            <StackPanel Orientation="Horizontal">
+                <ui:SymbolIcon Symbol="Info24" FontSize="18"
+                               Margin="0,0,12,0" VerticalAlignment="Center"
+                               Foreground="{DynamicResource AccentBrush}" />
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="{loc:Tr Jobs_NoServerTitle}"
+                               Style="{StaticResource BodyTextStyle}"
+                               FontWeight="SemiBold" />
+                    <TextBlock Style="{StaticResource TertiaryTextStyle}"
+                               Margin="0,2,0,0"
+                               Text="{loc:Tr Jobs_NoServerHint}" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Toolbar -->
+        <Grid Grid.Row="2" Margin="2,0,4,12"
+              Visibility="{Binding HasServers, Converter={StaticResource BoolToVis}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="240" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0"
+                      ItemsSource="{Binding Servers}"
+                      SelectedItem="{Binding SelectedServer, Mode=TwoWay}"
+                      DisplayMemberPath="Name"
+                      VerticalAlignment="Center" />
+
+            <ui:TextBox Grid.Column="1"
+                        Margin="10,0,10,0"
+                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                        PlaceholderText="{loc:Tr Jobs_FilterPlaceholder}"
+                        Icon="{ui:SymbolIcon Search24}"
+                        ClearButtonEnabled="True"
+                        VerticalAlignment="Center" />
+
+            <!-- Same icon buttons as the ones on a card, only taller so they match the fields. -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <!-- Chevrons written as raw code points: ChevronDownUp sits above U+FFFF, and
+                     SymbolIcon casts its enum value to a single char, which truncates it. -->
+                <Button Style="{StaticResource IconButtonStyle}" Width="34" Height="32"
+                        Command="{Binding ExpandAllCommand}" ToolTip="{loc:Tr Jobs_ExpandAll}">
+                    <ui:FontIcon FontFamily="{DynamicResource FluentSystemIcons}" Glyph="&#xE330;" FontSize="18"
+                                 Foreground="{DynamicResource TextSecondaryBrush}" />
+                </Button>
+                <Button Style="{StaticResource IconButtonStyle}" Width="34" Height="32" Margin="4,0,0,0"
+                        Command="{Binding CollapseAllCommand}" ToolTip="{loc:Tr Jobs_CollapseAll}">
+                    <ui:FontIcon FontFamily="{DynamicResource FluentSystemIcons}" Glyph="&#xF016D;" FontSize="18"
+                                 Foreground="{DynamicResource TextSecondaryBrush}" />
+                </Button>
+                <Button Style="{StaticResource IconButtonStyle}" Width="34" Height="32" Margin="12,0,0,0"
+                        Command="{Binding CheckAllCommand}" ToolTip="{loc:Tr Jobs_CheckAllShown}">
+                    <ui:SymbolIcon Symbol="CheckboxChecked24" FontSize="18"
+                                   Foreground="{DynamicResource TextSecondaryBrush}" />
+                </Button>
+                <Button Style="{StaticResource IconButtonStyle}" Width="34" Height="32" Margin="4,0,0,0"
+                        Command="{Binding ClearSelectionCommand}" ToolTip="{loc:Tr Jobs_UncheckAllShown}">
+                    <ui:SymbolIcon Symbol="CheckboxUnchecked24" FontSize="18"
+                                   Foreground="{DynamicResource TextSecondaryBrush}" />
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- Tree -->
+        <Border Grid.Row="3"
+                Style="{StaticResource SurfacePanelStyle}"
+                Margin="2,0,4,0"
+                Visibility="{Binding HasServers, Converter={StaticResource BoolToVis}}">
+            <TreeView ItemsSource="{Binding Nodes}"
+                      Background="Transparent"
+                      BorderThickness="0"
+                      Padding="10"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      VirtualizingPanel.IsVirtualizing="True"
+                      VirtualizingPanel.VirtualizationMode="Recycling">
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultTreeViewItemStyle}">
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                        <Setter Property="Visibility" Value="{Binding IsVisible, Converter={StaticResource BoolToVis}}" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
+
+                <TreeView.Resources>
+                    <!-- A folder names what holds the job, the job names itself: same reading order,
+                         and same two levels of text, as the title of a dashboard card. -->
+                    <Style x:Key="NodeNameStyle" TargetType="TextBlock">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsFolder}" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <HierarchicalDataTemplate DataType="{x:Type vm:JobNodeViewModel}" ItemsSource="{Binding Children}">
+                        <!-- Folders and jobs share the same three slots so a row always starts at the
+                             indentation of its own level: checkbox, glyph, name. -->
+                        <StackPanel Orientation="Horizontal" Margin="0,3">
+                            <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                      IsThreeState="False"
+                                      Margin="0,0,2,0"
+                                      VerticalAlignment="Center"
+                                      ToolTip="{Binding CheckBoxTooltip}" />
+
+                            <Grid Width="16" Margin="0,0,8,0" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Folder24" FontSize="16"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource TextTertiaryBrush}"
+                                               Visibility="{Binding IsFolder, Converter={StaticResource BoolToVis}}" />
+
+                                <Ellipse Style="{StaticResource StatusDotStyle}"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"
+                                         ToolTip="{Binding StatusTooltip}"
+                                         Visibility="{Binding IsJob, Converter={StaticResource BoolToVis}}" />
+                            </Grid>
+
+                            <TextBlock Text="{Binding Name}" Style="{StaticResource NodeNameStyle}" />
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
+            </TreeView>
+        </Border>
+
+        <!-- Footer -->
+        <Grid Grid.Row="4" Margin="4,12,6,0"
+              Visibility="{Binding HasServers, Converter={StaticResource BoolToVis}}">
+            <TextBlock Style="{StaticResource TertiaryTextStyle}"
+                       Text="{Binding Message}"
+                       VerticalAlignment="Center" />
+            <TextBlock Style="{StaticResource TertiaryTextStyle}"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Center"><Run Text="{Binding MonitoredCount, Mode=OneWay}" FontFamily="{StaticResource MonoFont}" Foreground="{DynamicResource ValueBrush}" /><Run Text="{loc:Tr Jobs_MonitoredOnServerSuffix}" /></TextBlock>
+        </Grid>
+    </Grid>
+</UserControl>

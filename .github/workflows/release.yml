@@ -1,0 +1,70 @@
+name: Release
+
+# A release is a decision, not a consequence of a commit: nothing here runs on a push to a branch.
+# Tagging publishes; the manual run only builds, so the packaging can be checked without releasing.
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  installer:
+    # The installer is built on Linux on purpose: the application cross-compiles for Windows from
+    # NuGet targeting packs, and makensis runs here too, so nothing in this build needs Windows.
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Install NSIS
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y nsis
+
+      - name: Work out the version
+        id: version
+        run: |
+          # The repository owns the first two fields, in the .csproj; the third is the build number,
+          # so the sequence of released versions cannot restart. A tag wins when there is one.
+          base="$(grep '<Version>' src/JenkinsTray/JenkinsTray.csproj | head -1 | cut -d'>' -f2 | cut -d'<' -f1 | cut -d. -f1,2)"
+
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            version="${GITHUB_REF_NAME#v}"
+          else
+            version="${base}.${GITHUB_RUN_NUMBER}"
+          fi
+
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "Building ${version}"
+
+      - name: Build the installer
+        run: bash packaging/build-installer.sh "${{ steps.version.outputs.version }}" artifacts
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: JenkinsTray-Setup-${{ steps.version.outputs.version }}
+          path: artifacts/*.exe
+          if-no-files-found: error
+
+      - name: Publish the release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*.exe
+          # The installer is not code-signed, and saying so here is more use than leaving people to
+          # discover it from a SmartScreen warning.
+          body: |
+            Download `JenkinsTray-Setup-${{ steps.version.outputs.version }}.exe` below and run it.
+
+            Per-user install, no elevation required. The installer is not code-signed, so Windows
+            SmartScreen warns on first run — *More info* → *Run anyway*.
+
+            Requires the [.NET 9 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/9.0).

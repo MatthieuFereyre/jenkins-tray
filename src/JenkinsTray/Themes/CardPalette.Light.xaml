@@ -1,0 +1,125 @@
+<!--
+    Palette of the application, light theme. The mockup only covers the dark theme; these are the
+    light equivalents, kept on the same recipe: the status tint is the same colour laid over the
+    surface, only the accents are darkened so they still read on white.
+    The neutrals are a white barely broken towards the accent blue rather than a grey; the card
+    itself stays pure white, which is what keeps it reading as raised above the page.
+    Keys must match CardPalette.Dark.xaml.
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Surfaces -->
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#F9FBFD" />
+    <SolidColorBrush x:Key="PageBackgroundBrush" Color="#F1F6FA" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="SurfaceBorderBrush" Color="#DDE5EC" />
+    <SolidColorBrush x:Key="DividerBrush" Color="#E6ECF2" />
+    <SolidColorBrush x:Key="HoverBrush" Color="#14000000" />
+    <SolidColorBrush x:Key="DangerHoverBrush" Color="#1FCE4B4B" />
+
+    <DropShadowEffect x:Key="SurfaceShadow" Color="#000000" Opacity="0.12"
+                      BlurRadius="16" ShadowDepth="4" Direction="270" />
+
+    <!-- Text -->
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#14171A" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#5B636B" />
+    <SolidColorBrush x:Key="TextTertiaryBrush" Color="#7E868E" />
+    <SolidColorBrush x:Key="ChevronBrush" Color="#A6ADB4" />
+    <SolidColorBrush x:Key="ValueBrush" Color="#3C444B" />
+
+    <!-- Accent: the blue the coverage gauges already use, so the app has only one. -->
+    <SolidColorBrush x:Key="AccentBrush" Color="#1B82C4" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="#241B82C4" />
+
+    <!--
+        WPF-UI paints its check boxes, toggles, rings and primary buttons with the Windows accent.
+        Overriding its keys here — this dictionary is merged after its theme — hands them the accent
+        of the application, so the window no longer shows two blues at once.
+    -->
+    <SolidColorBrush x:Key="SystemAccentColorPrimaryBrush" Color="#1B82C4" />
+    <SolidColorBrush x:Key="SystemAccentColorSecondaryBrush" Color="#1876B2" />
+    <SolidColorBrush x:Key="SystemAccentColorTertiaryBrush" Color="#166A9F" />
+    <SolidColorBrush x:Key="AccentFillColorDefaultBrush" Color="#1B82C4" />
+    <SolidColorBrush x:Key="AccentFillColorSecondaryBrush" Color="#1876B2" />
+    <SolidColorBrush x:Key="AccentFillColorTertiaryBrush" Color="#166A9F" />
+    <SolidColorBrush x:Key="AccentTextFillColorPrimaryBrush" Color="#14688F" />
+    <SolidColorBrush x:Key="AccentTextFillColorSecondaryBrush" Color="#14688F" />
+    <!-- What is drawn on top of the accent fill: a check mark, a toggle knob, a button label. -->
+    <SolidColorBrush x:Key="TextOnAccentFillColorPrimaryBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="TextOnAccentFillColorSecondaryBrush" Color="#FFFFFF" />
+
+    <!-- The primary button keeps its own family of keys, derived from the accent but never equal to it. -->
+    <SolidColorBrush x:Key="AccentButtonBackground" Color="#1B82C4" />
+    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver" Color="#E51B82C4" />
+    <SolidColorBrush x:Key="AccentButtonBackgroundPressed" Color="#CC1B82C4" />
+    <SolidColorBrush x:Key="AccentButtonForeground" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#99FFFFFF" />
+    <SolidColorBrush x:Key="AccentTextFillColorTertiaryBrush" Color="#1B82C4" />
+
+    <!--
+        The wash that breathes over a card while its job builds. Strongest over the status panel and
+        nearly gone over the text, so the card pulses without ever veiling what it says.
+    -->
+    <LinearGradientBrush x:Key="BuildPulseBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#2A1B82C4" />
+        <GradientStop Offset="1" Color="#081B82C4" />
+    </LinearGradientBrush>
+
+    <!-- Coverage gauges -->
+    <SolidColorBrush x:Key="GaugeTrackBrush" Color="#E3EAF0" />
+    <SolidColorBrush x:Key="GaugeLineBrush" Color="#1B82C4" />
+    <SolidColorBrush x:Key="GaugeBranchBrush" Color="#5566CC" />
+
+    <!-- Success -->
+    <SolidColorBrush x:Key="StatusSuccessAccentBrush" Color="#2C9E5C" />
+    <SolidColorBrush x:Key="StatusSuccessRingBrush" Color="#732C9E5C" />
+    <SolidColorBrush x:Key="StatusSuccessPanelBorderBrush" Color="#4D2C9E5C" />
+    <SolidColorBrush x:Key="StatusSuccessCardBorderBrush" Color="#DFE5E1" />
+    <LinearGradientBrush x:Key="StatusSuccessPanelBrush" StartPoint="0.18,0" EndPoint="0.82,1">
+        <GradientStop Offset="0" Color="#332C9E5C" />
+        <GradientStop Offset="1" Color="#0F2C9E5C" />
+    </LinearGradientBrush>
+
+    <!-- Unstable -->
+    <SolidColorBrush x:Key="StatusUnstableAccentBrush" Color="#B07D0C" />
+    <SolidColorBrush x:Key="StatusUnstableRingBrush" Color="#73B07D0C" />
+    <SolidColorBrush x:Key="StatusUnstablePanelBorderBrush" Color="#4DB07D0C" />
+    <SolidColorBrush x:Key="StatusUnstableCardBorderBrush" Color="#EAE3D5" />
+    <LinearGradientBrush x:Key="StatusUnstablePanelBrush" StartPoint="0.18,0" EndPoint="0.82,1">
+        <GradientStop Offset="0" Color="#33B07D0C" />
+        <GradientStop Offset="1" Color="#0FB07D0C" />
+    </LinearGradientBrush>
+
+    <!-- Failure -->
+    <SolidColorBrush x:Key="StatusFailureAccentBrush" Color="#CE4B4B" />
+    <SolidColorBrush x:Key="StatusFailureRingBrush" Color="#73CE4B4B" />
+    <SolidColorBrush x:Key="StatusFailurePanelBorderBrush" Color="#4DCE4B4B" />
+    <SolidColorBrush x:Key="StatusFailureCardBorderBrush" Color="#EEDCDC" />
+    <LinearGradientBrush x:Key="StatusFailurePanelBrush" StartPoint="0.18,0" EndPoint="0.82,1">
+        <GradientStop Offset="0" Color="#33CE4B4B" />
+        <GradientStop Offset="1" Color="#0FCE4B4B" />
+    </LinearGradientBrush>
+
+    <!-- Aborted -->
+    <SolidColorBrush x:Key="StatusAbortedAccentBrush" Color="#6F7A88" />
+    <SolidColorBrush x:Key="StatusAbortedRingBrush" Color="#736F7A88" />
+    <SolidColorBrush x:Key="StatusAbortedPanelBorderBrush" Color="#4D6F7A88" />
+    <SolidColorBrush x:Key="StatusAbortedCardBorderBrush" Color="#DCE3EA" />
+    <LinearGradientBrush x:Key="StatusAbortedPanelBrush" StartPoint="0.18,0" EndPoint="0.82,1">
+        <GradientStop Offset="0" Color="#336F7A88" />
+        <GradientStop Offset="1" Color="#0F6F7A88" />
+    </LinearGradientBrush>
+
+    <!-- Never built, disabled, unknown -->
+    <SolidColorBrush x:Key="StatusNeutralAccentBrush" Color="#6D757D" />
+    <SolidColorBrush x:Key="StatusNeutralRingBrush" Color="#736D757D" />
+    <SolidColorBrush x:Key="StatusNeutralPanelBorderBrush" Color="#4D6D757D" />
+    <SolidColorBrush x:Key="StatusNeutralCardBorderBrush" Color="#DDE5EC" />
+    <LinearGradientBrush x:Key="StatusNeutralPanelBrush" StartPoint="0.18,0" EndPoint="0.82,1">
+        <GradientStop Offset="0" Color="#336D757D" />
+        <GradientStop Offset="1" Color="#0F6D757D" />
+    </LinearGradientBrush>
+
+</ResourceDictionary>

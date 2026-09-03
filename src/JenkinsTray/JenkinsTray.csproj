@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>JenkinsTray</RootNamespace>
+    <AssemblyName>JenkinsTray</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <Version>1.1.0</Version>
+    <Product>Jenkins Tray</Product>
+    <Company>Matthieu Fereyre</Company>
+    <EnableDefaultApplicationDefinition>true</EnableDefaultApplicationDefinition>
+    <!-- Declared so a RID-specific publish (used by the installer) restores without an extra pass. -->
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <!-- Single-file publishing is a publish-time choice; see README for the command. -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- icon.png is the source artwork: embedded for the title bar and the tray glyph.
+         app.ico is generated from it and used as the executable icon. -->
+    <Resource Include="Assets\icon.png" />
+    <Resource Include="Assets\app.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
+    <PackageReference Include="H.NotifyIcon.Wpf" Version="2.3.2" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.1" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.0" />
+    <PackageReference Include="WPF-UI" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>

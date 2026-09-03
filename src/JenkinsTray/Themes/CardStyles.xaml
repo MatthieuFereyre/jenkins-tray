@@ -1,0 +1,230 @@
+<!--
+    Everything on a dashboard card that varies with the build status. The status is read from the
+    view-model rather than from a brush it would expose, so a theme swap repaints the cards: the
+    setters point at CardPalette.* through DynamicResource, and those keys are what changes.
+    The unmatched statuses (never built, disabled, unknown) fall through to the neutral defaults.
+    Merged after AppStyles.xaml, whose SurfacePanelStyle the card is built on.
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- A card is a surface whose outline carries a discreet tint of the status. -->
+    <Style x:Key="CardRootStyle" TargetType="Border" BasedOn="{StaticResource SurfacePanelStyle}">
+        <Setter Property="BorderBrush" Value="{DynamicResource StatusNeutralCardBorderBrush}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="Success">
+                <Setter Property="BorderBrush" Value="{DynamicResource StatusSuccessCardBorderBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Unstable">
+                <Setter Property="BorderBrush" Value="{DynamicResource StatusUnstableCardBorderBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Failure">
+                <Setter Property="BorderBrush" Value="{DynamicResource StatusFailureCardBorderBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Aborted">
+                <Setter Property="BorderBrush" Value="{DynamicResource StatusAbortedCardBorderBrush}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Left panel: the status colour laid over the card as a 160 degree wash. -->
+    <Style x:Key="CardStatusPanelStyle" TargetType="Border">
+        <Setter Property="Width" Value="82" />
+        <Setter Property="BorderThickness" Value="0,0,1,0" />
+        <Setter Property="CornerRadius" Value="13,0,0,13" />
+        <Setter Property="Padding" Value="0,16" />
+        <Setter Property="Background" Value="{DynamicResource StatusNeutralPanelBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource StatusNeutralPanelBorderBrush}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="Success">
+                <Setter Property="Background" Value="{DynamicResource StatusSuccessPanelBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource StatusSuccessPanelBorderBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Unstable">
+                <Setter Property="Background" Value="{DynamicResource StatusUnstablePanelBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource StatusUnstablePanelBorderBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Failure">
+                <Setter Property="Background" Value="{DynamicResource StatusFailurePanelBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource StatusFailurePanelBorderBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Aborted">
+                <Setter Property="Background" Value="{DynamicResource StatusAbortedPanelBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource StatusAbortedPanelBorderBrush}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--
+        The card breathes while its job builds. Only the opacity of this overlay moves: the brush it
+        paints with is shared by every card and frozen, and the card underneath keeps its own colours.
+        The corner radius is that of the card minus its border — a Border does not clip its child to
+        its own rounded corners, which is also why the status panel carries its radius itself.
+    -->
+    <Style x:Key="CardBuildPulseStyle" TargetType="Border">
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="CornerRadius" Value="13" />
+        <Setter Property="Background" Value="{DynamicResource BuildPulseBrush}" />
+        <Setter Property="Opacity" Value="0" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsActive}" Value="True">
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard x:Name="BuildPulse">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             From="0.12" To="0.95"
+                                             Duration="0:0:1.2"
+                                             AccelerationRatio="0.4" DecelerationRatio="0.4"
+                                             AutoReverse="True"
+                                             RepeatBehavior="Forever" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+                <DataTrigger.ExitActions>
+                    <StopStoryboard BeginStoryboardName="BuildPulse" />
+                </DataTrigger.ExitActions>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Ring around the status glyph. -->
+    <Style x:Key="CardStatusRingStyle" TargetType="Ellipse">
+        <Setter Property="Width" Value="24" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="StrokeThickness" Value="1.5" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Stroke" Value="{DynamicResource StatusNeutralRingBrush}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="Success">
+                <Setter Property="Stroke" Value="{DynamicResource StatusSuccessRingBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Unstable">
+                <Setter Property="Stroke" Value="{DynamicResource StatusUnstableRingBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Failure">
+                <Setter Property="Stroke" Value="{DynamicResource StatusFailureRingBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Aborted">
+                <Setter Property="Stroke" Value="{DynamicResource StatusAbortedRingBrush}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--
+        Status glyph, drawn on the 26x26 grid of the mockup: check, exclamation, cross, a single
+        slash for an aborted build, a dash for one that never ran, a question mark when the status
+        could not be read.
+    -->
+    <Style x:Key="CardStatusGlyphStyle" TargetType="Path">
+        <Setter Property="StrokeThickness" Value="2.4" />
+        <Setter Property="StrokeStartLineCap" Value="Round" />
+        <Setter Property="StrokeEndLineCap" Value="Round" />
+        <Setter Property="StrokeLineJoin" Value="Round" />
+        <Setter Property="Stretch" Value="None" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Stroke" Value="{DynamicResource StatusNeutralAccentBrush}" />
+        <Setter Property="Data" Value="M10.2,10.6 A2.9,2.9 0 1 1 13.1,13.6 L13.1,15.4" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="Success">
+                <Setter Property="Stroke" Value="{DynamicResource StatusSuccessAccentBrush}" />
+                <Setter Property="Data" Value="M7.5,13.5 L11.1,17.1 L18.1,9.6" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Unstable">
+                <Setter Property="Stroke" Value="{DynamicResource StatusUnstableAccentBrush}" />
+                <Setter Property="Data" Value="M13,7.5 L13,14" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Failure">
+                <Setter Property="Stroke" Value="{DynamicResource StatusFailureAccentBrush}" />
+                <Setter Property="Data" Value="M9,9 L17,17 M17,9 L9,17" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Aborted">
+                <Setter Property="Stroke" Value="{DynamicResource StatusAbortedAccentBrush}" />
+                <Setter Property="Data" Value="M9.5,9.5 L16.5,16.5" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="NotBuilt">
+                <Setter Property="Data" Value="M8.5,13 L17.5,13" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Disabled">
+                <Setter Property="Data" Value="M8.5,13 L17.5,13" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Filled dot under the exclamation and the question mark; nothing to draw for the others. -->
+    <Style x:Key="CardStatusGlyphDotStyle" TargetType="Path">
+        <Setter Property="Stretch" Value="None" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Visibility" Value="Collapsed" />
+        <Setter Property="Fill" Value="{DynamicResource StatusNeutralAccentBrush}" />
+        <Setter Property="Data" Value="M11.7,18 a1.4,1.4 0 1 0 2.8,0 a1.4,1.4 0 1 0 -2.8,0" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="Unknown">
+                <Setter Property="Visibility" Value="Visible" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Unstable">
+                <Setter Property="Visibility" Value="Visible" />
+                <Setter Property="Fill" Value="{DynamicResource StatusUnstableAccentBrush}" />
+                <Setter Property="Data" Value="M11.6,18 a1.4,1.4 0 1 0 2.8,0 a1.4,1.4 0 1 0 -2.8,0" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Build number and status label, both in the status colour. -->
+    <Style x:Key="CardStatusAccentTextStyle" TargetType="TextBlock">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{DynamicResource StatusNeutralAccentBrush}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="Success">
+                <Setter Property="Foreground" Value="{DynamicResource StatusSuccessAccentBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Unstable">
+                <Setter Property="Foreground" Value="{DynamicResource StatusUnstableAccentBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Failure">
+                <Setter Property="Foreground" Value="{DynamicResource StatusFailureAccentBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Aborted">
+                <Setter Property="Foreground" Value="{DynamicResource StatusAbortedAccentBrush}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Headline of the tests block, red when the figure it carries is a failure count. -->
+    <Style x:Key="CardTestsHeadlineStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding HeadlineIsFailure}" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource StatusFailureAccentBrush}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--
+        The coloured dot standing for a job status in the jobs tree, on the same colours as the cards
+        rather than on those of the tray glyph, which is drawn for a 16 px icon and not for a screen.
+    -->
+    <Style x:Key="StatusDotStyle" TargetType="Ellipse">
+        <Setter Property="Width" Value="8" />
+        <Setter Property="Height" Value="8" />
+        <Setter Property="Fill" Value="{DynamicResource StatusNeutralAccentBrush}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="Success">
+                <Setter Property="Fill" Value="{DynamicResource StatusSuccessAccentBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Unstable">
+                <Setter Property="Fill" Value="{DynamicResource StatusUnstableAccentBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Failure">
+                <Setter Property="Fill" Value="{DynamicResource StatusFailureAccentBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Aborted">
+                <Setter Property="Fill" Value="{DynamicResource StatusAbortedAccentBrush}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>
