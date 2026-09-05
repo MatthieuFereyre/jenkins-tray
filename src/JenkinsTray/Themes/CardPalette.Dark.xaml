@@ -56,20 +56,17 @@
     <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#990E1418" />
     <SolidColorBrush x:Key="AccentTextFillColorTertiaryBrush" Color="#4AA8E0" />
 
-    <!--
-        The wash that breathes over a card while its job builds. Strongest over the status panel and
-        nearly gone over the text, so the card pulses without ever veiling what it says.
-    -->
-    <LinearGradientBrush x:Key="BuildPulseBrush" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Offset="0" Color="#2E4AA8E0" />
-        <GradientStop Offset="1" Color="#0A4AA8E0" />
-    </LinearGradientBrush>
-
     <!-- Coverage gauges -->
     <SolidColorBrush x:Key="GaugeTrackBrush" Color="#2A2F34" />
     <SolidColorBrush x:Key="GaugeLineBrush" Color="#4AA8E0" />
     <SolidColorBrush x:Key="GaugeBranchBrush" Color="#7A8CE0" />
 
+    <!--
+        Statuses. Besides its panel, its ring and its accents, each one carries the wash that
+        breathes over the whole card while the job builds: the pulse takes the colour of the last
+        build, so a card being rebuilt never stops saying what it last was. Strongest over the
+        status panel and nearly gone over the text, so it pulses without veiling what the card says.
+    -->
     <!-- Success — #4CC878 -->
     <SolidColorBrush x:Key="StatusSuccessAccentBrush" Color="#4CC878" />
     <SolidColorBrush x:Key="StatusSuccessRingBrush" Color="#664CC878" />
@@ -77,6 +74,10 @@
     <SolidColorBrush x:Key="StatusSuccessCardBorderBrush" Color="#272C30" />
     <LinearGradientBrush x:Key="StatusSuccessPanelBrush" StartPoint="0.18,0" EndPoint="0.82,1">
         <GradientStop Offset="0" Color="#294CC878" />
+        <GradientStop Offset="1" Color="#0A4CC878" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="StatusSuccessPulseBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#2E4CC878" />
         <GradientStop Offset="1" Color="#0A4CC878" />
     </LinearGradientBrush>
 
@@ -89,6 +90,10 @@
         <GradientStop Offset="0" Color="#29E8B03F" />
         <GradientStop Offset="1" Color="#0AE8B03F" />
     </LinearGradientBrush>
+    <LinearGradientBrush x:Key="StatusUnstablePulseBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#2EE8B03F" />
+        <GradientStop Offset="1" Color="#0AE8B03F" />
+    </LinearGradientBrush>
 
     <!-- Failure — #E66565 -->
     <SolidColorBrush x:Key="StatusFailureAccentBrush" Color="#E66565" />
@@ -97,6 +102,10 @@
     <SolidColorBrush x:Key="StatusFailureCardBorderBrush" Color="#33272A" />
     <LinearGradientBrush x:Key="StatusFailurePanelBrush" StartPoint="0.18,0" EndPoint="0.82,1">
         <GradientStop Offset="0" Color="#29E66565" />
+        <GradientStop Offset="1" Color="#0AE66565" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="StatusFailurePulseBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#2EE66565" />
         <GradientStop Offset="1" Color="#0AE66565" />
     </LinearGradientBrush>
 
@@ -109,6 +118,10 @@
         <GradientStop Offset="0" Color="#298A93A0" />
         <GradientStop Offset="1" Color="#0A8A93A0" />
     </LinearGradientBrush>
+    <LinearGradientBrush x:Key="StatusAbortedPulseBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#2E8A93A0" />
+        <GradientStop Offset="1" Color="#0A8A93A0" />
+    </LinearGradientBrush>
 
     <!-- Never built, disabled, unknown — #6D757D -->
     <SolidColorBrush x:Key="StatusNeutralAccentBrush" Color="#6D757D" />
@@ -117,6 +130,10 @@
     <SolidColorBrush x:Key="StatusNeutralCardBorderBrush" Color="#272C30" />
     <LinearGradientBrush x:Key="StatusNeutralPanelBrush" StartPoint="0.18,0" EndPoint="0.82,1">
         <GradientStop Offset="0" Color="#296D757D" />
+        <GradientStop Offset="1" Color="#0A6D757D" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="StatusNeutralPulseBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#2E6D757D" />
         <GradientStop Offset="1" Color="#0A6D757D" />
     </LinearGradientBrush>
 

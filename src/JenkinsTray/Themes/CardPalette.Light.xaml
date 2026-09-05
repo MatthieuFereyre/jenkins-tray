@@ -58,20 +58,17 @@
     <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#99FFFFFF" />
     <SolidColorBrush x:Key="AccentTextFillColorTertiaryBrush" Color="#1B82C4" />
 
-    <!--
-        The wash that breathes over a card while its job builds. Strongest over the status panel and
-        nearly gone over the text, so the card pulses without ever veiling what it says.
-    -->
-    <LinearGradientBrush x:Key="BuildPulseBrush" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Offset="0" Color="#2A1B82C4" />
-        <GradientStop Offset="1" Color="#081B82C4" />
-    </LinearGradientBrush>
-
     <!-- Coverage gauges -->
     <SolidColorBrush x:Key="GaugeTrackBrush" Color="#E3EAF0" />
     <SolidColorBrush x:Key="GaugeLineBrush" Color="#1B82C4" />
     <SolidColorBrush x:Key="GaugeBranchBrush" Color="#5566CC" />
 
+    <!--
+        Statuses. Besides its panel, its ring and its accents, each one carries the wash that
+        breathes over the whole card while the job builds: the pulse takes the colour of the last
+        build, so a card being rebuilt never stops saying what it last was. Strongest over the
+        status panel and nearly gone over the text, so it pulses without veiling what the card says.
+    -->
     <!-- Success -->
     <SolidColorBrush x:Key="StatusSuccessAccentBrush" Color="#2C9E5C" />
     <SolidColorBrush x:Key="StatusSuccessRingBrush" Color="#732C9E5C" />
@@ -80,6 +77,10 @@
     <LinearGradientBrush x:Key="StatusSuccessPanelBrush" StartPoint="0.18,0" EndPoint="0.82,1">
         <GradientStop Offset="0" Color="#332C9E5C" />
         <GradientStop Offset="1" Color="#0F2C9E5C" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="StatusSuccessPulseBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#2A2C9E5C" />
+        <GradientStop Offset="1" Color="#082C9E5C" />
     </LinearGradientBrush>
 
     <!-- Unstable -->
@@ -91,6 +92,10 @@
         <GradientStop Offset="0" Color="#33B07D0C" />
         <GradientStop Offset="1" Color="#0FB07D0C" />
     </LinearGradientBrush>
+    <LinearGradientBrush x:Key="StatusUnstablePulseBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#2AB07D0C" />
+        <GradientStop Offset="1" Color="#08B07D0C" />
+    </LinearGradientBrush>
 
     <!-- Failure -->
     <SolidColorBrush x:Key="StatusFailureAccentBrush" Color="#CE4B4B" />
@@ -100,6 +105,10 @@
     <LinearGradientBrush x:Key="StatusFailurePanelBrush" StartPoint="0.18,0" EndPoint="0.82,1">
         <GradientStop Offset="0" Color="#33CE4B4B" />
         <GradientStop Offset="1" Color="#0FCE4B4B" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="StatusFailurePulseBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#2ACE4B4B" />
+        <GradientStop Offset="1" Color="#08CE4B4B" />
     </LinearGradientBrush>
 
     <!-- Aborted -->
@@ -111,6 +120,10 @@
         <GradientStop Offset="0" Color="#336F7A88" />
         <GradientStop Offset="1" Color="#0F6F7A88" />
     </LinearGradientBrush>
+    <LinearGradientBrush x:Key="StatusAbortedPulseBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#2A6F7A88" />
+        <GradientStop Offset="1" Color="#086F7A88" />
+    </LinearGradientBrush>
 
     <!-- Never built, disabled, unknown -->
     <SolidColorBrush x:Key="StatusNeutralAccentBrush" Color="#6D757D" />
@@ -120,6 +133,10 @@
     <LinearGradientBrush x:Key="StatusNeutralPanelBrush" StartPoint="0.18,0" EndPoint="0.82,1">
         <GradientStop Offset="0" Color="#336D757D" />
         <GradientStop Offset="1" Color="#0F6D757D" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="StatusNeutralPulseBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#2A6D757D" />
+        <GradientStop Offset="1" Color="#086D757D" />
     </LinearGradientBrush>
 
 </ResourceDictionary>

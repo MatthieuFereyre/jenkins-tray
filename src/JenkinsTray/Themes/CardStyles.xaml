@@ -56,17 +56,31 @@
     </Style>
 
     <!--
-        The card breathes while its job builds. Only the opacity of this overlay moves: the brush it
-        paints with is shared by every card and frozen, and the card underneath keeps its own colours.
+        The card breathes while its job builds, in the colour of the build that came before: the
+        pulse says "this one is running" without ever contradicting what the card says it is. Only
+        the opacity of this overlay moves — the brush is the frozen one of the status, and the card
+        underneath keeps its own colours.
         The corner radius is that of the card minus its border — a Border does not clip its child to
         its own rounded corners, which is also why the status panel carries its radius itself.
     -->
     <Style x:Key="CardBuildPulseStyle" TargetType="Border">
         <Setter Property="IsHitTestVisible" Value="False" />
         <Setter Property="CornerRadius" Value="13" />
-        <Setter Property="Background" Value="{DynamicResource BuildPulseBrush}" />
+        <Setter Property="Background" Value="{DynamicResource StatusNeutralPulseBrush}" />
         <Setter Property="Opacity" Value="0" />
         <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="Success">
+                <Setter Property="Background" Value="{DynamicResource StatusSuccessPulseBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Unstable">
+                <Setter Property="Background" Value="{DynamicResource StatusUnstablePulseBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Failure">
+                <Setter Property="Background" Value="{DynamicResource StatusFailurePulseBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Aborted">
+                <Setter Property="Background" Value="{DynamicResource StatusAbortedPulseBrush}" />
+            </DataTrigger>
             <DataTrigger Binding="{Binding IsActive}" Value="True">
                 <DataTrigger.EnterActions>
                     <BeginStoryboard x:Name="BuildPulse">
@@ -83,6 +97,33 @@
                 <DataTrigger.ExitActions>
                     <StopStoryboard BeginStoryboardName="BuildPulse" />
                 </DataTrigger.ExitActions>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--
+        The "building" pill. Solid rather than tinted, and in the colour of the status like the rest
+        of the card: it shows exactly while the pulse washes the card in that same hue, where a soft
+        pill would dissolve. The ink is the one the theme lays over an accent fill — near black over
+        the bright colours of the dark theme, white over the deeper ones of the light theme.
+    -->
+    <Style x:Key="CardActivityBadgeStyle" TargetType="Border">
+        <Setter Property="CornerRadius" Value="9" />
+        <Setter Property="Padding" Value="7,1" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="{DynamicResource StatusNeutralAccentBrush}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Status}" Value="Success">
+                <Setter Property="Background" Value="{DynamicResource StatusSuccessAccentBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Unstable">
+                <Setter Property="Background" Value="{DynamicResource StatusUnstableAccentBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Failure">
+                <Setter Property="Background" Value="{DynamicResource StatusFailureAccentBrush}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Status}" Value="Aborted">
+                <Setter Property="Background" Value="{DynamicResource StatusAbortedAccentBrush}" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
