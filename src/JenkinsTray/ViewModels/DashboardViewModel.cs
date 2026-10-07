@@ -51,6 +51,12 @@ public partial class DashboardViewModel : ObservableObject
 
     public ObservableCollection<MonitoredJobViewModel> Jobs { get; } = [];
 
+    /// <summary>
+    /// The same cards, by server. This is what the view shows: one headed, foldable group per
+    /// server, or a single group without header when the dashboard only holds one server.
+    /// </summary>
+    public ObservableCollection<DashboardGroupViewModel> Groups { get; } = [];
+
     /// <summary>Each label states the direction its criterion reads in — there is no other.</summary>
     public IReadOnlyList<SortOption> SortOptions { get; } =
     [
@@ -89,30 +95,24 @@ public partial class DashboardViewModel : ObservableObject
     /// <summary>Reconciles the card list with the poller's state, in place, keeping scroll and focus.</summary>
     public void Sync()
     {
-        var states = Order(_workspace.Monitoring.States);
-        var keys = states.Select(s => s.Key).ToHashSet(StringComparer.Ordinal);
-
-        for (var i = Jobs.Count - 1; i >= 0; i--)
-            if (!keys.Contains(Jobs[i].Key))
-                Jobs.RemoveAt(i);
+        // Grouping starts at two servers on the dashboard; the servers then come first in the
+        // order, so each one's cards are contiguous and the chosen criterion applies within it.
+        var grouped = _workspace.Monitoring.States.Select(s => s.ServerId).Distinct(StringComparer.Ordinal).Count() > 1;
+        var states = Order(_workspace.Monitoring.States, grouped);
 
         var existing = Jobs.ToDictionary(j => j.Key, StringComparer.Ordinal);
-
-        for (var i = 0; i < states.Count; i++)
+        var wanted = new List<MonitoredJobViewModel>(states.Count);
+        foreach (var state in states)
         {
-            if (existing.TryGetValue(states[i].Key, out var vm))
-            {
-                vm.Update(states[i]);
-
-                var index = Jobs.IndexOf(vm);
-                if (index != i)
-                    Jobs.Move(index, i);
-            }
+            if (existing.TryGetValue(state.Key, out var vm))
+                vm.Update(state);
             else
-            {
-                Jobs.Insert(i, new MonitoredJobViewModel(states[i], _workspace));
-            }
+                vm = new MonitoredJobViewModel(state, _workspace);
+            wanted.Add(vm);
         }
+
+        Reconcile(Jobs, wanted);
+        SyncGroups(states, wanted, grouped);
 
         IsEmpty = Jobs.Count == 0;
         IsRefreshing = _workspace.Monitoring.IsRefreshing;
@@ -121,7 +121,78 @@ public partial class DashboardViewModel : ObservableObject
             ? Loc.T("Dashboard_RefreshedAt", Humanize.RelativeTime(last))
             : Loc.T("Dashboard_NotRefreshedYet");
 
-        SummaryText = BuildSummary();
+        SummaryText = BuildSummary(Jobs);
+    }
+
+    /// <summary>One group per server, in the order the states came, each reconciled in place.</summary>
+    private void SyncGroups(IReadOnlyList<MonitoredJobState> states, IReadOnlyList<MonitoredJobViewModel> cards, bool grouped)
+    {
+        var existing = Groups.ToDictionary(g => g.ServerId, StringComparer.Ordinal);
+        var collapsed = _workspace.Settings.CollapsedDashboardServers;
+        var wanted = new List<DashboardGroupViewModel>();
+        var members = new Dictionary<string, List<MonitoredJobViewModel>>(StringComparer.Ordinal);
+
+        for (var i = 0; i < states.Count; i++)
+        {
+            var serverId = states[i].ServerId;
+            if (!members.TryGetValue(serverId, out var list))
+            {
+                if (!existing.TryGetValue(serverId, out var group))
+                    group = new DashboardGroupViewModel(serverId, OnGroupExpandedChanged, !collapsed.Contains(serverId));
+
+                group.Name = states[i].ServerName;
+                wanted.Add(group);
+                members[serverId] = list = [];
+            }
+            list.Add(cards[i]);
+        }
+
+        Reconcile(Groups, wanted);
+
+        foreach (var group in Groups)
+        {
+            var jobs = members[group.ServerId];
+            Reconcile(group.Jobs, jobs);
+            group.ShowHeader = grouped;
+            group.Summary = BuildSummary(jobs);
+            group.HasFailure = jobs.Any(j => j.Status == BuildStatus.Failure);
+            group.IsBuilding = jobs.Any(j => j.IsBuilding);
+        }
+    }
+
+    /// <summary>Folding a group is a choice that outlives the session, like the sort.</summary>
+    private void OnGroupExpandedChanged(DashboardGroupViewModel group)
+    {
+        var collapsed = _workspace.Settings.CollapsedDashboardServers;
+        var changed = group.IsExpanded
+            ? collapsed.Remove(group.ServerId)
+            : !collapsed.Contains(group.ServerId);
+        if (!group.IsExpanded && changed)
+            collapsed.Add(group.ServerId);
+
+        if (changed)
+            _workspace.SavePreferences();
+    }
+
+    /// <summary>
+    /// Brings <paramref name="target"/> to <paramref name="wanted"/> by removals, moves and
+    /// insertions only, never a reset, so the cards keep their scroll position and focus.
+    /// </summary>
+    private static void Reconcile<T>(ObservableCollection<T> target, IReadOnlyList<T> wanted) where T : class
+    {
+        var keep = new HashSet<T>(wanted, ReferenceEqualityComparer.Instance);
+        for (var i = target.Count - 1; i >= 0; i--)
+            if (!keep.Contains(target[i]))
+                target.RemoveAt(i);
+
+        for (var i = 0; i < wanted.Count; i++)
+        {
+            var index = target.IndexOf(wanted[i]);
+            if (index < 0)
+                target.Insert(i, wanted[i]);
+            else if (index != i)
+                target.Move(index, i);
+        }
     }
 
     /// <summary>
@@ -129,46 +200,56 @@ public partial class DashboardViewModel : ObservableObject
     /// most recent or longest first — which is what its label announces. Ties always fall back to
     /// the qualified name, so the order never wobbles between two refreshes.
     /// </summary>
-    private IReadOnlyList<MonitoredJobState> Order(IReadOnlyList<MonitoredJobState> states)
+    /// <remarks>
+    /// When the dashboard is grouped, the server comes first and the criterion second: each
+    /// group is then a contiguous run, ordered by the criterion within.
+    /// </remarks>
+    private IReadOnlyList<MonitoredJobState> Order(IReadOnlyList<MonitoredJobState> states, bool byServer)
     {
         var byName = StringComparer.CurrentCultureIgnoreCase;
+
+        // Server name, then id: two servers sharing a name must still form two runs.
+        var source = byServer
+            ? states.OrderBy(s => s.ServerName, byName).ThenBy(s => s.ServerId, StringComparer.Ordinal)
+            : states.OrderBy(_ => 0);
 
         var ordered = SelectedSort.Key switch
         {
             DashboardSort.Name =>
-                states.OrderBy(s => s.QualifiedName, byName),
+                source.ThenBy(s => s.QualifiedName, byName),
 
             DashboardSort.Status =>
-                states.OrderByDescending(s => StatusMap.Severity(s.Snapshot?.Status ?? BuildStatus.Unknown)),
+                source.ThenByDescending(s => StatusMap.Severity(s.Snapshot?.Status ?? BuildStatus.Unknown)),
 
             DashboardSort.LastBuild =>
-                states.OrderByDescending(s => s.Snapshot?.LastCompletedBuild?.Timestamp ?? DateTimeOffset.MinValue),
+                source.ThenByDescending(s => s.Snapshot?.LastCompletedBuild?.Timestamp ?? DateTimeOffset.MinValue),
 
             DashboardSort.Duration =>
-                states.OrderByDescending(s => s.Snapshot?.LastCompletedBuild?.Duration ?? TimeSpan.Zero),
+                source.ThenByDescending(s => s.Snapshot?.LastCompletedBuild?.Duration ?? TimeSpan.Zero),
 
             // Jobs without any coverage sit at the end rather than at the bottom of the scale.
             DashboardSort.Coverage =>
-                states.OrderBy(s => s.Coverage?.LinePercent ?? s.Coverage?.BranchPercent ?? double.MaxValue),
+                source.ThenBy(s => s.Coverage?.LinePercent ?? s.Coverage?.BranchPercent ?? double.MaxValue),
 
-            _ => states.OrderBy(s => s.ServerName, byName),
+            _ => source.ThenBy(s => s.ServerName, byName),
         };
 
         return [.. ordered.ThenBy(s => s.QualifiedName, byName)];
     }
 
-    private string BuildSummary()
+    /// <summary>The summary line of the page, and of each group header.</summary>
+    private static string BuildSummary(IReadOnlyCollection<MonitoredJobViewModel> jobs)
     {
-        if (Jobs.Count == 0)
+        if (jobs.Count == 0)
             return string.Empty;
 
-        var failures = Jobs.Count(j => j.Status == BuildStatus.Failure);
-        var unstable = Jobs.Count(j => j.Status == BuildStatus.Unstable);
-        var building = Jobs.Count(j => j.IsBuilding);
+        var failures = jobs.Count(j => j.Status == BuildStatus.Failure);
+        var unstable = jobs.Count(j => j.Status == BuildStatus.Unstable);
+        var building = jobs.Count(j => j.IsBuilding);
 
         var parts = new List<string>
         {
-            Loc.Plural(Jobs.Count, "Dashboard_MonitoredJobOne", "Dashboard_MonitoredJobMany"),
+            Loc.Plural(jobs.Count, "Dashboard_MonitoredJobOne", "Dashboard_MonitoredJobMany"),
         };
 
         if (failures > 0)

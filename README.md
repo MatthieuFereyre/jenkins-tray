@@ -14,7 +14,9 @@ with a Fluent interface (Windows 11).
   checkboxes to pick what gets monitored.
 - **Dashboard**: status, build number, duration, tests (passed / failed / skipped) and code
   coverage (lines and branches). Cards sort by server, name, status, last build, duration or
-  coverage — the choice and its direction are remembered.
+  coverage — the choice and its direction are remembered. With more than one server, the cards
+  are grouped by server under headers that fold away; a folded header still shows its job count,
+  a red dot for a failure and a ring while something builds. The folded groups are remembered too.
 - **Start a build** from the job's card. The card breathes while the build runs, from the request
   through to the end. Needs the *Job/Build* permission on the configured account; everything else
   only needs read access.
@@ -73,7 +75,7 @@ they can only be decrypted by your Windows session on that machine.
 
 Every write shifts the three previous versions into `settings.backup1.json` through
 `settings.backup3.json`, in the same folder. A write that changes nothing does not consume a
-generation, and a mere display preference (the dashboard sort) is saved without consuming one
+generation, and a mere display preference (the dashboard sort, a folded group) is saved without consuming one
 either — otherwise a few clicks would be enough to push the whole configuration out of the backups.
 To roll back: close the application, rename the backup you want to `settings.json`, start again.
 

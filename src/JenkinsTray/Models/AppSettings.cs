@@ -63,6 +63,12 @@ public sealed class AppSettings
 
     public DashboardSort DashboardSort { get; set; } = DashboardSort.ServerThenName;
 
+    /// <summary>
+    /// Ids of the servers whose dashboard group is folded. Ids rather than names, so a renamed
+    /// server keeps its state; an id whose server is gone is harmless and simply never matches.
+    /// </summary>
+    public List<string> CollapsedDashboardServers { get; set; } = [];
+
     public AppSettings Clone()
     {
         var json = System.Text.Json.JsonSerializer.Serialize(this, SettingsJson.Options);
