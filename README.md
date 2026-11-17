@@ -31,7 +31,7 @@ with a Fluent interface (Windows 11).
 ## Requirements
 
 - Windows 10 1809+ or Windows 11
-- [.NET 9 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/9.0) (or the SDK to build)
+- [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) (or the SDK to build)
 
 ## Install
 
@@ -158,7 +158,7 @@ in `artifacts/`. It ends by reading back what it just wrote — the installer's 
 the count of packaged files, read out of the `makensis` log since a solid LZMA block cannot be read
 back — because no Linux agent can install it to make sure.
 
-So the machine needs the **.NET 9 SDK** and **`makensis`** (the `nsis` package on Debian).
+So the machine needs the **.NET 10 SDK** and **`makensis`** (the `nsis` package on Debian).
 
 ### What the installer does
 
